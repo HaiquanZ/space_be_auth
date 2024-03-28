@@ -1,0 +1,30 @@
+{
+  "name": "space_be_auth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HaiquanZ/space_be_auth.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HaiquanZ/space_be_auth/issues"
+  },
+  "homepage": "https://github.com/HaiquanZ/space_be_auth#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "email-validator": "^2.0.4",
+    "express": "^4.19.1",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.9.3",
+    "nodemailer": "^6.9.13",
+    "nodemon": "^3.1.0"
+  }
+}
