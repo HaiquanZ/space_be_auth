@@ -28,6 +28,6 @@ exports.getUserById = async(id) => {
 exports.updateUser = async(data) => {
     await db.promise().query(
         "UPDATE user SET name = ?, bio = ?, phone = ?, gender = ? WHERE id = ?",
-        [data.name, data.bio, data.phone, data.gender, data.id]
+        [data.name, data.bio, data.phone, data.gender, data.user.id]
     );
 }

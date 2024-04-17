@@ -88,6 +88,7 @@ exports.login = async (req, res, next) => {
         }
 
         //jwt authentication
+        delete user.password;
         const token = jwt.sign({
             user: user,
         }, JWT_SECRET);
@@ -164,8 +165,6 @@ exports.getUserById = async (req, res, next) => {
 //update profile
 exports.updateUser = async (req, res, next) => {
    try{
-        const data = req.body;
-        data.id = req.user.id;
         await userModel.updateUser(req.body);
         res.status(200).json({
             status: 'success',
