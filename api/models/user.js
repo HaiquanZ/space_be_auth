@@ -68,6 +68,6 @@ exports.setNewPassword = async (data) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await db.promise().query(
-        "UPDATE user SET password = ?, token = ? WHERE email = ?", [hashedPassword, '', email]
+        "UPDATE user SET password = ?, token = ? WHERE email = ?", [hashedPassword, null, email]
     )
 }
