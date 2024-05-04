@@ -112,19 +112,43 @@ exports.login = async (req, res, next) => {
 //send mail
 exports.sendOTP = async (req, res, next) => {
     let transporter = nodemailer.createTransport({
-        service: 'Gmail',
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
         auth: {
             user: process.env.EMAIL_NAME,
             pass: process.env.EMAIL_PASSWORD
         }
     });
     // Email content
+    let OTP = await userModel.genOTP(req.body.email);
+
+    let htmlContent = `
+    <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+        <div style="margin:50px auto;width:70%;padding:20px 0">
+            <div style="border-bottom:1px solid #eee">
+            <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">Space</a>
+            </div>
+            <p style="font-size:1.1em">Hi,</p>
+            <p>Thank you for choosing Space. Use the following OTP to complete your Sign Up procedures. OTP is valid for 5 minutes</p>
+            <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">${OTP}</h2>
+            <p style="font-size:0.9em;">Regards,<br />Space</p>
+            <hr style="border:none;border-top:1px solid #eee" />
+            <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
+            <p>Space Inc</p>
+            <p>1600 Amphitheatre Parkway</p>
+            <p>California</p>
+            </div>
+        </div>
+    </div>
+    `
+    
     let mailOptions = {
-        from: 'hqz.kim@gmail.com', 
+        from: process.env.EMAIL_NAME, 
         to: req.body.email, 
-        subject: 'OTP forgot password', 
-        text: 'This is a test email sent from Node.js using nodemailer.'
-        // html: '<b>Hello world?</b>'
+        subject: 'OTP forgot password - Space', 
+        // text: 'This is a test email sent from Node.js using nodemailer.',
+        html: htmlContent
     };
 
     // Sending the email
@@ -135,6 +159,39 @@ exports.sendOTP = async (req, res, next) => {
             console.log('Email sent: ' + info.response);
         }
     });
+
+    return res.status(200).json({
+        status: 'ok'
+    })
+}
+
+//confirm OTP
+exports.confirmOTP = async (req, res, next) => {
+    try{
+        const trueOTP = await userModel.confirmOTP(req.body.email);
+        // console.log(trueOTP.token);
+        if(req.body.otp === trueOTP.token){
+            await userModel.setNewPassword(
+                {password: req.body.password, email: req.body.email}
+            )
+
+            return res.status(200).json({
+                status: 'success',
+                data: {
+                    message: 'Password changed, login to continue.'
+                }
+            })
+        }else{
+            return res.status(403).json({
+                status: 'fail',
+                data: {
+                    message: "Invalid OTP token"
+                }
+            })
+        }
+    }catch(err){
+        next(err);
+    }
 }
 
 //get Information user by Id
