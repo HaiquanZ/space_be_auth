@@ -233,3 +233,19 @@ exports.updateUser = async (req, res, next) => {
     next(err); 
    } 
 }
+
+//search User
+exports.searchUser = async (req, res, next) => {
+    try{
+        const result = await userModel.searchUser(req.query.keyword);
+
+        return res.status(200).json({
+            status: 'success',
+            data:{
+                users: result
+            }
+        })
+    }catch(err){
+        next(err);
+    }
+}

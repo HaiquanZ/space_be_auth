@@ -71,3 +71,11 @@ exports.setNewPassword = async (data) => {
         "UPDATE user SET password = ?, token = ? WHERE email = ?", [hashedPassword, null, email]
     )
 }
+
+exports.searchUser = async(keyword) => {
+    const [result] = await db.promise().query(
+        "SELECT id, name, email, avatar FROM user WHERE email LIKE ? OR name LIKE ?", ['%' + keyword + '%', '%' + keyword + '%']
+    )
+
+    return result;
+}
