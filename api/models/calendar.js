@@ -28,8 +28,8 @@ exports.updateNote = async (data) => {
 
 exports.getNoteByMonth = async (data) => {
     const [result] = await db.promise().query(
-        "SELECT id, type, content, createdAt FROM note WHERE userId = ? AND MONTH(createdAt) = ?",
-        [data.userId, data.time]
+        "SELECT id, type, content, createdAt FROM note WHERE userId = ? AND MONTH(createdAt) = ? AND YEAR(createdAt) = ?",
+        [data.userId, data.month, data.year]
     )
 
     return result;
@@ -37,8 +37,8 @@ exports.getNoteByMonth = async (data) => {
 
 exports.getNoteByDay = async (data) => {
     const [result] = await db.promise().query(
-        "SELECT id, type, content, createdAt FROM note WHERE userId = ? AND MONTH(createdAt) = ? AND DAY(createdAt) = ?",
-        [data.userId, data.month, data.day]
+        "SELECT id, type, content, createdAt FROM note WHERE userId = ? AND MONTH(createdAt) = ? AND DAY(createdAt) = ? AND YEAR(createdAt) = ?",
+        [data.userId, data.month, data.day, data.year]
     )
 
     return result;

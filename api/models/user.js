@@ -2,7 +2,7 @@ const db = require("../config/db");
 const bcrypt = require("bcrypt");
 
 exports.createUser = async (userData) => {
-  const { name, email, password } = userData;
+  const { username, email, password } = userData;
 
   //hash password
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -11,7 +11,7 @@ exports.createUser = async (userData) => {
     .promise()
     .query(
       "INSERT INTO user (name, email, password, created_at, updated_at) VALUES(?,?,?,?,?)",
-      [name, email, hashedPassword, new Date(), new Date()]
+      [username, email, hashedPassword, new Date(), new Date()]
     );
   return result.insertId;
 };

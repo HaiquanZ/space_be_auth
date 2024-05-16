@@ -8,13 +8,13 @@ const nodemailer = require('nodemailer');
 exports.register = async (req, res, next) => {
     try{
         const{
-            name,
+            username,
             email,
             password
         } = req.body;
 
         const user = {
-            name,
+            username,
             email,
             password
         }
@@ -25,7 +25,7 @@ exports.register = async (req, res, next) => {
             return res.status(409).json({
                 status: 'fail',
                 data: {
-                    message: 'User already exists'
+                    message: 'This email have already exists'
                 }
             });
         }
@@ -101,7 +101,9 @@ exports.login = async (req, res, next) => {
                 id: user.id,
                 name: user.name,
                 email: user.email,
-                roleId: user.role_id
+                roleId: user.role_id,
+                gender: user.gender,
+                avatar: user.avatar
             }
         });
     }catch(err){
@@ -161,7 +163,10 @@ exports.sendOTP = async (req, res, next) => {
     });
 
     return res.status(200).json({
-        status: 'ok'
+        status: 'success',
+        data: {
+            message: 'Check your email to get OTP'
+        }
     })
 }
 

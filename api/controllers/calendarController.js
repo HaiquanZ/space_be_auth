@@ -16,7 +16,7 @@ exports.createNote = async (req, res, next) => {
 
 exports.deleteNote = async (req, res, next) => {
     try{
-        await calendarModel.deleteNote(req.body.id);
+        await calendarModel.deleteNote(req.query.id);
         return res.status(200).json({
             status: 'success',
             data: {
@@ -44,11 +44,24 @@ exports.updateNote = async (req, res, next) => {
 
 exports.getNoteByMonth = async (req, res, next) => {
     try{
-        const result = await calendarModel.getNoteByMonth({userId: req.query.userId, time: req.query.month})
+        //get number of days in the current month
+        const { year, month } = req.query;
+        const numberOfDays = new Date(year, month, 0).getDate();
+        let notes = Array.from({ length: numberOfDays}, () => []);
+        const result = await calendarModel.getNoteByMonth({
+            userId: req.query.userId, 
+            month: req.query.month,
+            year: req.query.year
+        });
+        for(let i = 0; i < result.length; i++){
+            let dateObject = new Date(result[i].createdAt);
+            notes[dateObject.getDate() - 1].push(result[i]);
+        }
+
         return res.status(200).json({
             status: 'success',
             data: {
-                result
+                notes
             }
         });
     }catch(err){
@@ -58,11 +71,11 @@ exports.getNoteByMonth = async (req, res, next) => {
 
 exports.getNoteByDay = async (req, res, next) => {
     try{
-        const result = await calendarModel.getNoteByDay({userId: req.query.userId, month: req.query.month, day: req.query.day})
+        const result = await calendarModel.getNoteByDay({userId: req.query.userId, month: req.query.month, day: req.query.day, year: req.query.year})
         return res.status(200).json({
             status: 'success',
             data: {
-                result
+                notes: result
             }
         });
     }catch(err){
