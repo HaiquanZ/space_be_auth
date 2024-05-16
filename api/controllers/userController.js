@@ -254,3 +254,20 @@ exports.searchUser = async (req, res, next) => {
         next(err);
     }
 }
+
+exports.interact = async (req, res, next) => {
+    try{
+        const result = await userModel.interact(
+            {a: req.body.user.id, b: req.body.b, type: req.body.type}
+        )
+        return res.status(200).json({
+            status: 'success',
+            data: {
+                result
+            }
+        });
+    }catch(err){
+        console.log(err);
+        next(err);
+    }
+}

@@ -8,6 +8,7 @@ router.post('/forgot-password', userController.sendOTP);
 router.post('/confirm-otp', userController.confirmOTP);
 
 router.get('/search', userController.searchUser);
+router.post('/interact', userController.interact)
 router.get('/:id', userController.getUserById);
 router.post('/:id', userController.updateUser);
 

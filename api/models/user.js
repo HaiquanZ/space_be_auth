@@ -79,3 +79,26 @@ exports.searchUser = async(keyword) => {
 
     return result;
 }
+
+exports.interact = async(data) => {
+  let [result] = await db.promise().query(
+      "SELECT * FROM interaction WHERE a = ? AND b = ?",
+      [data.a, data.b]
+  )
+  if(result.length == 0){
+    result = await db.promise().query(
+      "INSERT INTO interaction (a, b, type) VALUES (?, ?, ?)",
+      [data.a, data.b, data.type]
+    )
+  }else{
+    result = await db.promise().query(
+      "UPDATE interaction SET type = ? WHERE a = ? AND b = ?",
+      [data.type, data.a, data.b]
+    )
+  }
+  return result;
+}
+
+exports.getInteractUser = async(data) => {
+  
+}
